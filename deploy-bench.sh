@@ -35,7 +35,7 @@ echo "All remotes added... start deployments..."
 time (
 	for I in $(seq 1 $N_DEPLOY); do
 		REMOTE_NAME=$(getRemoteName $APP_NAME $I)
-		git push --quiet $REMOTE_NAME master:master >/dev/null &
+		git push -q $REMOTE_NAME master:master
 		PIDS="$PIDS $!"
 	done
 
