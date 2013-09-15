@@ -31,7 +31,7 @@ echo "Start adding remotes..."
 for I in $(seq 1 $N_DEPLOY); do
 	CUR_APP_NAME="$APP_NAME$I"
 	APP_URL="http://"$CUR_APP_NAME".dokku-paas.org/"
-	echo "ab -n$2 -c$3 $APP_URL" > $REPORT_DIR/$CUR_APP_NAME$REPORT_EXT &
+	ab -n$2 -c$3 $APP_URL > $REPORT_DIR/$CUR_APP_NAME$REPORT_EXT &
 	PIDS="$PIDS $!"
 done
 
