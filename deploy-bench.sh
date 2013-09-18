@@ -7,7 +7,7 @@
 
 function usage()
 {
-	echo -e "Usage:\n\tdeploy-bench <number_of_deployments>"
+	echo -e "Usage:\n\tdeploy-bench <start_index> <end_index>"
 }
 
 function getRemoteName()
@@ -19,12 +19,13 @@ function getRemoteName()
 
 [[ -z $1 ]] && usage && exit 1
 
-N_DEPLOY=$1
+START_INDEX=$1
+END_INDEX=$2
 APP_NAME="sieve" # $(pwd | rev | cut -d'/' -f1 | rev)
 
 echo "Start adding remotes..."
 
-for I in $(seq 1 $N_DEPLOY); do
+for I in $(seq $START_INDEX $END_INDEX); do
 	REMOTE_NAME=$(getRemoteName $APP_NAME $I)
 	CUR_APP_NAME="$APP_NAME$I"
 	git remote add $REMOTE_NAME "git@dokku-paas.org:$CUR_APP_NAME"
@@ -33,7 +34,7 @@ done
 echo "All remotes added... start deployments..."
 
 time (
-	for I in $(seq 1 $N_DEPLOY); do
+	for I in $(seq $START_INDEX $END_INDEX); do
 		REMOTE_NAME=$(getRemoteName $APP_NAME $I)
 		git push -q $REMOTE_NAME master:master
 		PIDS="$PIDS $!"
@@ -46,7 +47,7 @@ time (
 
 echo "Deployments finished... Removing remotes..."
 
-for I in $(seq 1 $N_DEPLOY); do
+for I in $(seq $START_INDEX $END_INDEX); do
 	REMOTE_NAME=$(getRemoteName $APP_NAME $I)
 	git remote rm $REMOTE_NAME
 done
